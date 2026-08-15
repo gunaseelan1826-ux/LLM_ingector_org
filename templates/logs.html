@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detection Logs</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="wrapper">
+
+  <header class="header">
+    <h1>🛡️ Detection Logs</h1>
+    <p class="subtitle">History of analyzed prompts</p>
+    <nav class="nav">
+      <a href="{{ url_for('index') }}">Detector</a>
+      <a href="{{ url_for('logs') }}" class="active">Logs</a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <section class="card">
+      <div class="logs-header">
+        <h2>Recent Analyses ({{ rows|length }})</h2>
+        <form method="POST" action="{{ url_for('clear_logs') }}" onsubmit="return confirm('Clear all logs?');">
+          <button type="submit" class="clear-btn">Clear Logs</button>
+        </form>
+      </div>
+
+      {% if rows %}
+      <table class="logs-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Prompt</th>
+            <th>Prediction</th>
+            <th>Confidence</th>
+            <th>Patterns</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for prompt, prediction, confidence, patterns, timestamp in rows %}
+          <tr class="{{ 'danger-row' if prediction == 'Dangerous' else 'safe-row' }}">
+            <td>{{ timestamp }}</td>
+            <td class="prompt-cell">{{ prompt }}</td>
+            <td><span class="badge-mini {{ 'danger' if prediction == 'Dangerous' else 'safe' }}">{{ prediction }}</span></td>
+            <td>{{ confidence }}%</td>
+            <td>{{ patterns if patterns else '—' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>No logs yet. Analyze a prompt first.</p>
+      {% endif %}
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Academic Project · LLM Prompt-Injection Detector · Built with Flask + scikit-learn</p>
+  </footer>
+
+</div>
+
+</body>
+</html>

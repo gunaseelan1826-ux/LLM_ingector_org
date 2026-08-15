@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PromptShield - LLM Security</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">
+            <span>🛡</span>
+            <div>
+                <h2>PromptShield</h2>
+                <p>LLM Security System</p>
+            </div>
+        </div>
+
+        <div class="status">
+            <span class="dot"></span>
+            System Online
+        </div>
+    </header>
+
+
+    <main class="container">
+
+        <!-- Hero -->
+        <section class="hero">
+
+            <div>
+                <p class="tag">AI CYBERSECURITY</p>
+
+                <h1>
+                    LLM Prompt-Injection
+                    <span>& Jailbreak Detector</span>
+                </h1>
+
+                <p class="description">
+                    Detect and block malicious prompts before they
+                    reach the Large Language Model.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- Detector -->
+        <section class="detector-card">
+
+            <div class="card-header">
+                <div>
+                    <h2>Analyze Prompt</h2>
+                    <p>
+                        Enter a prompt below to check whether it is
+                        safe or potentially dangerous.
+                    </p>
+                </div>
+
+                <div class="shield-icon">🛡️</div>
+            </div>
+
+
+            <textarea
+                id="prompt"
+                placeholder="Enter a prompt to analyze..."
+            ></textarea>
+
+
+            <div class="actions">
+
+                <button id="analyzeBtn" onclick="analyzePrompt()">
+                    🔍 Analyze Prompt
+                </button>
+
+                <button class="clear-btn" onclick="clearPrompt()">
+                    Clear
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- Result -->
+        <section id="resultCard" class="result-card hidden">
+
+            <div class="result-header">
+
+                <div>
+                    <p class="result-label">ANALYSIS RESULT</p>
+
+                    <h2 id="resultTitle">
+                        Safe
+                    </h2>
+                </div>
+
+                <div id="resultIcon" class="result-icon">
+                    ✓
+                </div>
+
+            </div>
+
+
+            <div class="confidence-box">
+
+                <div>
+                    <span>Confidence</span>
+                    <strong id="confidence">
+                        0%
+                    </strong>
+                </div>
+
+                <div class="progress">
+                    <div id="progressBar"></div>
+                </div>
+
+            </div>
+
+
+            <div class="patterns">
+
+                <h3>Detection Details</h3>
+
+                <div id="patternList">
+                    No suspicious patterns detected.
+                </div>
+
+            </div>
+
+
+            <div id="warning" class="warning hidden">
+                ⚠️ This prompt has been blocked because it
+                appears to contain a potential injection or
+                jailbreak attempt.
+            </div>
+
+        </section>
+
+
+        <!-- Statistics -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <span>📝</span>
+                <div>
+                    <h3 id="totalCount">0</h3>
+                    <p>Total Analyses</p>
+                </div>
+            </div>
+
+            <div class="stat-card safe-stat">
+                <span>✓</span>
+                <div>
+                    <h3 id="safeCount">0</h3>
+                    <p>Safe Prompts</p>
+                </div>
+            </div>
+
+            <div class="stat-card danger-stat">
+                <span>⚠</span>
+                <div>
+                    <h3 id="dangerCount">0</h3>
+                    <p>Blocked Prompts</p>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- Recent Logs -->
+        <section class="logs-card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>Recent Analysis</h2>
+                    <p>Latest prompt detection results</p>
+                </div>
+
+                <button onclick="clearLogs()" class="clear-logs">
+                    Clear Logs
+                </button>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Prompt</th>
+                            <th>Result</th>
+                            <th>Confidence</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="logsTable">
+
+                        <tr>
+                            <td colspan="4" class="empty">
+                                No analysis performed yet.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        <p>
+            PromptShield • LLM Prompt-Injection & Jailbreak Detector
+        </p>
+    </footer>
+   <!-- DANGER STAMP -->
+<div id="dangerStamp" class="danger-stamp">
+
+    <img src="{{ url_for('static', filename='danger.png') }}">
+
+    <div class="danger-text">
+        DANGER
+    </div>
+
+</div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
