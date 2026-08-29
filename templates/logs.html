@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Detection Logs</title>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -11,8 +12,13 @@
 <div class="wrapper">
 
   <header class="header">
-    <h1>🛡️ Detection Logs</h1>
-    <p class="subtitle">History of analyzed prompts</p>
+    <div class="header-brand">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="PromptShield logo" class="logo-img">
+      <div>
+        <h1>Detection Logs</h1>
+        <p class="subtitle">History of analyzed prompts</p>
+      </div>
+    </div>
     <nav class="nav">
       <a href="{{ url_for('index') }}">Detector</a>
       <a href="{{ url_for('logs') }}" class="active">Logs</a>
@@ -29,6 +35,7 @@
       </div>
 
       {% if rows %}
+      <div class="table-container">
       <table class="logs-table">
         <thead>
           <tr>
@@ -51,14 +58,15 @@
           {% endfor %}
         </tbody>
       </table>
+      </div>
       {% else %}
-      <p>No logs yet. Analyze a prompt first.</p>
+      <p class="empty-state">No logs yet. Analyze a prompt first.</p>
       {% endif %}
     </section>
   </main>
 
   <footer class="footer">
-    <p>Academic Project · LLM Prompt-Injection Detector · Built with Flask + scikit-learn</p>
+    <p>Academic Project &middot; LLM Prompt-Injection Detector &middot; Built with Flask + scikit-learn</p>
   </footer>
 
 </div>

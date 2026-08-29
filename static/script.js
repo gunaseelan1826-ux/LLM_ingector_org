@@ -25,32 +25,52 @@ function analyzePrompt() {
 
     const patterns = [];
 
-    const rules = [
-        {
-            text: "ignore previous instructions",
-            name: "Instruction Override"
-        },
-        {
-            text: "ignore all previous",
-            name: "Instruction Override"
-        },
-        {
-            text: "developer mode",
-            name: "Developer Mode"
-        },
-        {
-            text: "system prompt",
-            name: "System Prompt Extraction"
-        },
-        {
-            text: "jailbreak",
-            name: "Jailbreak Attempt"
-        },
-        {
-            text: "DAN",
-            name: "DAN Persona"
-        }
-    ];
+   const rules = [
+    {
+        text: "ignore previous instructions",
+        name: "Instruction Override"
+    },
+    {
+        text: "ignore all previous",
+        name: "Instruction Override"
+    },
+    {
+        text: "developer mode",
+        name: "Developer Mode"
+    },
+    {
+        text: "system prompt",
+        name: "System Prompt Extraction"
+    },
+    {
+        text: "jailbreak",
+        name: "Jailbreak Attempt"
+    },
+    {
+        text: "DAN",
+        name: "DAN Persona"
+    },
+    {
+        text: "hack",
+        name: "Illegal Activity"
+    },
+    {
+        text: "bank account",
+        name: "Financial Fraud"
+    },
+    {
+        text: "steal",
+        name: "Illegal Activity"
+    },
+    {
+        text: "bypass security",
+        name: "Security Bypass"
+    },
+    {
+        text: "exploit",
+        name: "Illegal Activity"
+    }
+];
 
     const lowerPrompt = prompt.toLowerCase();
 
@@ -134,16 +154,14 @@ function showResult(isDangerous, confidence, patterns) {
 
         title.className = "danger";
 
-        icon.textContent = "⚠";
-
-        icon.style.background = "#fff0f0";
-        icon.style.color = "#d64545";
+        icon.textContent = "!";
+        icon.className = "result-icon danger";
 
         warning.classList.remove("hidden");
 
         patternList.innerHTML =
             patterns
-                .map(p => "⚠ " + p)
+                .map(p => "&#9888; " + p)
                 .join("<br>");
 
     } else {
@@ -152,16 +170,13 @@ function showResult(isDangerous, confidence, patterns) {
 
         title.className = "safe";
 
-        icon.textContent = "✓";
-
-        icon.style.background = "#dff8ed";
-        icon.style.color = "#159570";
+        icon.textContent = "\u2713";
+        icon.className = "result-icon safe";
 
         warning.classList.add("hidden");
 
         patternList.textContent =
-            "✓ No suspicious patterns detected.";
-
+            "\u2713 No suspicious patterns detected.";
     }
 }
 

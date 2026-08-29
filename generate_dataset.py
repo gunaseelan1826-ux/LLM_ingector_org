@@ -152,14 +152,20 @@ for t in dangerous_templates:
         rows.append((t, 1))
 
 # Build safe rows
+
 for t in safe_templates:
     for _ in range(6):
-        row = t
+        # unpack if tuple, else use as-is
+        if isinstance(t, tuple):
+            template_text, label = t
+        else:
+            template_text, label = t, 0
+
+        row = template_text
         row = row.replace("{topic2}", random.choice(topic2))
         row = row.replace("{topic}", random.choice(topics))
         row = row.replace("{place}", random.choice(places))
-        row = row.replace("{language}", random.choice(languages))
-        rows.append((row, 0))
+        rows.append((row, label))
 
 random.shuffle(rows)
 
