@@ -445,6 +445,52 @@ textarea#prompt:focus {
     display: none;
 }
 
+.ai-response-box {
+    margin-top: 18px;
+    padding: 16px 18px;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--signal);
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+}
+
+.ai-response-box.hidden {
+    display: none;
+}
+
+.ai-response-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-soft);
+}
+
+.ai-badge {
+    font-family: var(--display);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--signal);
+    letter-spacing: 0.5px;
+}
+
+.ai-response-header small {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.ai-response-text {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
 /* ===== Stats ===== */
 .stats {
     display: grid;

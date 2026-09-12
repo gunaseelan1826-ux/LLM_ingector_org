@@ -1,4 +1,4 @@
-"""
+﻿"""
 train.py
 Trains a TF-IDF + Logistic Regression classifier to detect
 LLM prompt injection / jailbreak attempts.
@@ -15,13 +15,22 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # ---------------------------------------------------------
-# 1. Load dataset
+# 1. Load dataset & clean labels
 # ---------------------------------------------------------
 df = pd.read_csv("dataset.csv")
-df = df.dropna()
-print(f"Loaded {len(df)} rows | Dangerous: {sum(df.label==1)} | Safe: {sum(df.label==0)}")
 
-X = df["text"]
+# Clean labels: strip whitespace, trailing semicolons or commas
+df["label"] = df["label"].astype(str).str.strip().str.rstrip(";,").str.strip()
+df["label"] = pd.to_numeric(df["label"], errors="coerce")
+df = df.dropna(subset=["text", "label"])
+df["label"] = df["label"].astype(int)
+df = df[df["label"].isin([0, 1])]
+
+n_danger = sum(df["label"] == 1)
+n_safe = sum(df["label"] == 0)
+print(f"Loaded {len(df)} rows | Dangerous: {n_danger} | Safe: {n_safe}")
+
+X = df["text"].astype(str)
 y = df["label"]
 
 # ---------------------------------------------------------
@@ -36,9 +45,10 @@ X_train, X_test, y_train, y_test = train_test_split(
 # ---------------------------------------------------------
 vectorizer = TfidfVectorizer(
     ngram_range=(1, 2),
-    max_features=3000,
+    max_features=4000,
     stop_words="english",
     lowercase=True,
+    sublinear_tf=True,
 )
 X_train_vec = vectorizer.fit_transform(X_train)
 X_test_vec = vectorizer.transform(X_test)
