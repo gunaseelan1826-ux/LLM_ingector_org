@@ -940,3 +940,19 @@ footer {
         font-size: 28px;
     }
 }
+.logs-btn {
+  display: inline-block;
+  position: relative;
+  left: 35%;
+  padding: 8px 18px;
+  text-decoration: none;
+  font-size: 14px;
+  background: var(--signal-dim);
+  border: 1px solid rgba(79, 209, 197, 0.3);
+  border-radius: 10px;
+  color: var(--signal);
+}
+.logs-btn:hover {
+  background: #bbbacc;
+  color: #1b2129;
+}
