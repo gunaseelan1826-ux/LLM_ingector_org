@@ -1,8 +1,10 @@
 ﻿"""
 database.py
-Manages SQLite database (logs.db) for the LLM Prompt Injection & Jailbreak Detector.
+Manages SQLite database (logs.db) and optional Cloud Database (Supabase)
+for the LLM Prompt Injection & Jailbreak Detector.
+
 Tables:
-  1. logs: Prompt analysis logs (prompt, prediction, confidence, patterns, timestamp)
+  1. logs / prompt_logs: Prompt analysis logs (prompt, prediction, confidence, patterns, timestamp)
   2. threat_signatures: Known attack signatures, regex patterns, categories, severity
   3. known_attacks: Catalog of known jailbreak prompts, categories, and sources
 """
@@ -10,9 +12,17 @@ Tables:
 import sqlite3
 import os
 import re
+import json
+import urllib.request
+import urllib.error
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "logs.db")
+SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip().rstrip("/")
+SUPABASE_API_KEY = os.getenv("SUPABASE_API_KEY", "").strip()
 
 
 def get_connection():
@@ -24,7 +34,7 @@ def init_db():
     conn = get_connection()
     cur = conn.cursor()
 
-    # 1. Logs table
+    # 1. Local Logs table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS logs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -174,17 +184,59 @@ def get_threat_signatures():
     return compiled
 
 
+def sync_to_cloud(prompt, prediction, confidence, patterns, timestamp):
+    """Optionally syncs log record to Supabase Cloud Database via REST API."""
+    url = os.getenv("SUPABASE_URL", "").strip().rstrip("/")
+    api_key = os.getenv("SUPABASE_API_KEY", "").strip()
+
+    if not url or not api_key:
+        return  # Cloud DB not configured, local SQLite will handle everything
+
+    endpoint = f"{url}/rest/v1/prompt_logs"
+    payload = {
+        "prompt": prompt,
+        "prediction": prediction,
+        "confidence": float(confidence),
+        "patterns": ", ".join(patterns) if isinstance(patterns, list) else str(patterns or ""),
+        "timestamp": timestamp
+    }
+
+    try:
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            endpoint,
+            data=data,
+            headers={
+                "apikey": api_key,
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+                "Prefer": "return=minimal"
+            },
+            method="POST"
+        )
+        with urllib.request.urlopen(req, timeout=3) as resp:
+            pass  # Successfully synced to cloud
+    except Exception as e:
+        print(f"[Warning] Cloud database sync skipped: {e}")
+
+
 def save_log(prompt, prediction, confidence, patterns):
-    """Saves an analysis record to the logs table."""
+    """Saves an analysis record to local SQLite and syncs to Cloud Database."""
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    pattern_str = ", ".join(patterns) if isinstance(patterns, list) else str(patterns or "")
+
+    # 1. Always save to local SQLite
     conn = get_connection()
     cur = conn.cursor()
-    pattern_str = ", ".join(patterns) if isinstance(patterns, list) else str(patterns or "")
     cur.execute(
         "INSERT INTO logs (prompt, prediction, confidence, patterns, timestamp) VALUES (?, ?, ?, ?, ?)",
-        (prompt, prediction, float(confidence), pattern_str, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        (prompt, prediction, float(confidence), pattern_str, timestamp)
     )
     conn.commit()
     conn.close()
+
+    # 2. Sync to Cloud Database if configured
+    sync_to_cloud(prompt, prediction, confidence, patterns, timestamp)
 
 
 def get_logs(limit=100):
@@ -201,7 +253,7 @@ def get_logs(limit=100):
 
 
 def clear_logs():
-    """Wipes all rows from logs table."""
+    """Wipes all rows from local logs table."""
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("DELETE FROM logs")
@@ -224,4 +276,4 @@ def get_stats():
 
 if __name__ == "__main__":
     init_db()
-    print("Database initialized successfully!")
+    print("Database module initialized with Cloud DB support!")
