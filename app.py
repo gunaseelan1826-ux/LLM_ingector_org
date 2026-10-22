@@ -13,6 +13,7 @@ from predict import predict_prompt
 from llm_client import query_llm
 
 app = Flask(__name__)
+database.init_db()
 
 # ---------------------------------------------------------
 # Routes
@@ -90,4 +91,4 @@ def clear_logs():
 
 if __name__ == "__main__":
     database.init_db()
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=False, host="0.0.0.0", port=5000)
