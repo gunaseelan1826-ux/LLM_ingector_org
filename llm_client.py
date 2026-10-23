@@ -26,7 +26,7 @@ def query_llm(prompt_text: str):
     if not api_key:
         return None, "API Key is not set in .env. Prompt was verified Safe by detector."
 
-    # Gemini API generateContent endpoint
+        # Gemini API generateContent endpoint
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={api_key}"
     payload = {
         "contents": [
