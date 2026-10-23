@@ -79,6 +79,9 @@ def predict_prompt(text: str):
     confidence = round(float(max(proba)) * 100, 2)
 
     patterns = detect_patterns(text)
+    # very short text with no rule match = Safe
+    if len(text.split()) < 3 and not patterns:
+        return {"prediction": "Safe", "confidence": 95.0, "patterns": []}
 
     # If rule-based patterns are found but ML said "Safe", still surface
     # the patterns as a warning signal (defense in depth)
