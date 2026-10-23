@@ -43,7 +43,11 @@ PATTERN_RULES = [
     (r"leak (the )?(confidential|hidden|system)", "Data Exfiltration Attempt"),
      (r"(how to|help me|teach me|show me|steps to).{0,30}(become a|be a|act as a)?\s*terrorist", "Extremist/Violent Content Request"),
     (r"(bomb|attack|weapon) (making|building) (instructions|guide|tutorial)", "Extremist/Violent Content Request"),
-        (r"\b(porn|porno|pornography|sex|sexy|xxx|nude|nudes|nsfw|fuck|fucking|bitch)\b", "Adult/Explicit Content"),
+    (r"\b(porn|porno|pornography|sex|sexy|xxx|nude|nudes|nsfw|fuck|fucking|bitch)\b", "Adult/Explicit Content"),
+    (r"\b(suicide|suicidal|kill myself|killing myself|end my life|take my own life|want to die|self[- ]?harm|hurt myself)\b", "Self-Harm Content"),
+    (r"\b(terrorist|terrorism|terrorists|bomb making|make a bomb|build a bomb|suicide bomb|suicide bomber|isis|jihad attack|mass shooting|mass murder)\b", "Extremist/Violent Content Request"),
+    (r"\b(cocaine|heroin|meth|methamphetamine|lsd|mdma|ecstasy|marijuana|ganja|weed|opium|fentanyl|buy drugs|sell drugs|make drugs|drug dealer)\b", "Illegal Drugs Content"),
+    (r"\b(hack|hacking|hacker|hack into|crack password|password cracking|brute force|ddos|dos attack|sql injection|xss|phishing|keylogger|ransomware|malware|trojan|exploit|backdoor|reverse shell|steal password|steal data|botnet)\b", "Hacking/Cyber Attack Content"),
 ]
 
 COMPILED_RULES = [(re.compile(p, re.IGNORECASE), label) for p, label in PATTERN_RULES]
