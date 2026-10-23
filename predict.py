@@ -43,6 +43,7 @@ PATTERN_RULES = [
     (r"leak (the )?(confidential|hidden|system)", "Data Exfiltration Attempt"),
      (r"(how to|help me|teach me|show me|steps to).{0,30}(become a|be a|act as a)?\s*terrorist", "Extremist/Violent Content Request"),
     (r"(bomb|attack|weapon) (making|building) (instructions|guide|tutorial)", "Extremist/Violent Content Request"),
+        (r"\b(porn|porno|pornography|sex|sexy|xxx|nude|nudes|nsfw|fuck|fucking|bitch)\b", "Adult/Explicit Content"),
 ]
 
 COMPILED_RULES = [(re.compile(p, re.IGNORECASE), label) for p, label in PATTERN_RULES]
