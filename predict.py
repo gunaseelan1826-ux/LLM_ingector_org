@@ -49,7 +49,7 @@ PATTERN_RULES = [
     (r"\b(cocaine|heroin|meth|methamphetamine|lsd|mdma|ecstasy|marijuana|ganja|weed|opium|fentanyl|buy drugs|sell drugs|make drugs|drug dealer)\b", "Illegal Drugs Content"),
     (r"\b(hack|hacking|hacker|hack into|crack password|password cracking|brute force|ddos|dos attack|sql injection|xss|phishing|keylogger|ransomware|malware|trojan|exploit|backdoor|reverse shell|steal password|steal data|botnet)\b", "Hacking/Cyber Attack Content"),
     (r"\b(hijack|hijacked|hijacking|kidnap|kidnapped|kidnapping|hostage|hostages|school shooting|shoot up|shoot the school|murder|how to kill|kill someone|stab someone|poison someone)\b", "Violent/Criminal Content"),
-    (r"\b(hide|conceal|bury|dispose of)\b.*\b(body|dead body|corpse)\b|\b(body|dead body|corpse)\b.*\b(hide|conceal|bury|dispose of)\b"),
+   (r"\b(hide|conceal|bury|dispose of)\b.*\b(body|dead body|corpse)\b|\b(body|dead body|corpse)\b.*\b(hide|conceal|bury|dispose of)\b","Violent/Criminal Content"),
 ]
 
 COMPILED_RULES = [(re.compile(p, re.IGNORECASE), label) for p, label in PATTERN_RULES]
